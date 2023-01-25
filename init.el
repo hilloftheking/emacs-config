@@ -5,23 +5,15 @@
 	     '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
-(defun install-packages-if-required (names)
-  (let ((already-refreshed nil))
-    (while names
-      (let ((name (car names)))
-	(unless (package-installed-p name)
-	  (unless already-refreshed
-	    (package-refresh-contents)
-	    (setq already-refreshed t))
-	  (package-install name)))
-      (setq names (cdr names)))))
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 
-(install-packages-if-required '(use-package which-key gruvbox-theme))
-
+(setq use-package-always-ensure t)
 (use-package which-key
-  :ensure t
   :init
   (which-key-mode))
+(use-package gruvbox-theme)
 
 ;; Frame Configuration
 (menu-bar-mode -1)
