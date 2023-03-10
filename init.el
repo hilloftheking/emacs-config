@@ -44,6 +44,7 @@
 
 ;; Always display line numbers
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+(add-hook 'prog-mode-hook 'column-number-mode)
 
 ;; Side buttons on mouse to move between buffers
 (bind-key "<mouse-9>" 'next-buffer)
@@ -59,6 +60,10 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
+;; Put autosaves in ~/.emacs.d/
+(setq backup-directory-alist
+      `(("." . ,(concat user-emacs-directory "backups"))))
+
 ;; Stuff from customize
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -71,9 +76,8 @@
  '(ispell-dictionary nil)
  '(package-selected-packages
    '(magithub magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode sly flycheck gruvbox-theme which-key use-package company)))
+
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 112 :width normal :foundry "ADBO" :family "Terminus")))))
+ ;; Terminus on desktop, default for monospace on laptop
+ '(default ((t (:inherit nil :extend nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 112 :width normal :foundry "*"
+			 :family (if (= (getenv "HOSTNAME") "machine") "Terminus" "Monospace"))))))
