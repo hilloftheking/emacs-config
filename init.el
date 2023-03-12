@@ -1,3 +1,8 @@
+;;; init.el --- Main config file for emacs
+
+;;; Commentary:
+;; My personal config, probably sucks
+
 ;; Packages
 (require 'package)
 (add-to-list 'package-archives
@@ -24,15 +29,16 @@
 (use-package magit)
 (use-package magithub)
 (use-package sly
-  :init
+  :config
   (setq inferior-lisp-program "sbcl"))
 (use-package flycheck
   :init
   (global-flycheck-mode))
+(use-package clang-format
+  :config
+  (setq clang-format-fallback-style "llvm"))
 (use-package clang-format+
-  :hook
-  (c-mode . clang-format+-mode)
-  (cpp-mode . clang-format+-mode))
+  :hook c-mode-common)
 (use-package rainbow-mode
   :hook
   (prog-mode . rainbow-mode))
@@ -42,12 +48,17 @@
 (bind-key "C-x C-b" #'electric-buffer-list)
 
 ;; Always display line numbers
-(add-hook 'prog-mode-hook 'display-line-numbers-mode)
-(add-hook 'prog-mode-hook 'column-number-mode)
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(add-hook 'prog-mode-hook #'column-number-mode)
 
 ;; Side buttons on mouse to move between buffers
-(bind-key "<mouse-9>" 'next-buffer)
-(bind-key "<mouse-8>" 'previous-buffer)
+(bind-key "<mouse-9>" #'next-buffer)
+(bind-key "<mouse-8>" #'previous-buffer)
+
+;; Enable scrolling the text left with C-x <
+(put 'scroll-left 'disabled nil)
+;; Press a in dired to open without creating a new buffer
+(put 'dired-find-alternate-file 'disabled nil)
 
 ;; Extension for common lisp (.cl)
 (add-to-list 'auto-mode-alist '("\\.cl\\'" . common-lisp-mode))
@@ -82,4 +93,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :extend nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 112 :width normal :foundry "*" :family (if (= (getenv "HOSTNAME") "machine") "Terminus" "Monospace"))))))
-(put 'scroll-left 'disabled nil)
+
+(provide 'init)
+;;; init.el ends here
