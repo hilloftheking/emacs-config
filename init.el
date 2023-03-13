@@ -3,6 +3,7 @@
 ;;; Commentary:
 ;; My personal config, probably sucks
 
+;;; Code:
 ;; Packages
 (require 'package)
 (add-to-list 'package-archives
@@ -25,6 +26,7 @@
 (use-package lsp-mode
   :hook
   (c-mode-common . lsp))
+(use-package lsp-ui)
 (use-package gdscript-mode)
 (use-package magit)
 (use-package magithub)
@@ -39,6 +41,7 @@
   (setq clang-format-fallback-style "llvm"))
 (use-package clang-format+
   :hook c-mode-common)
+(use-package meson-mode)
 (use-package rainbow-mode
   :hook
   (prog-mode . rainbow-mode))
@@ -85,7 +88,7 @@
    '("d80952c58cf1b06d936b1392c38230b74ae1a2a6729594770762dc0779ac66b7" default))
  '(ispell-dictionary nil)
  '(package-selected-packages
-   '(gdscript-mode magithub magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode sly flycheck gruvbox-theme which-key use-package company)))
+   '(meson-mode gdscript-mode magithub magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode sly flycheck gruvbox-theme which-key use-package company)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
