@@ -24,6 +24,10 @@
   :init
   (global-company-mode))
 (use-package lsp-mode
+  :init
+  (progn
+    (setq lsp-keymap-prefix "C-c l")
+    (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
   :hook
   (c-mode-common . lsp))
 (use-package lsp-ui)
@@ -37,8 +41,12 @@
   :init
   (global-flycheck-mode))
 (use-package clang-format
-  :config
-  (setq clang-format-fallback-style "llvm"))
+  :init
+  (progn
+    (add-hook
+     'c-mode-common-hook
+     (lambda ()
+       (setq clang-format-fallback-style "llvm")))))
 (use-package clang-format+
   :hook c-mode-common)
 (use-package meson-mode)
@@ -46,6 +54,20 @@
   :hook
   (prog-mode . rainbow-mode))
 (use-package gruvbox-theme)
+(use-package multiple-cursors
+  :config
+  (define-key
+    (current-global-map)
+    (kbd "C-c c")
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "*") #'mc/mark-all-like-this)
+      (define-key map (kbd "n") #'mc/mark-next-like-this)
+      (define-key map (kbd "p") #'mc/mark-previous-like-this)
+      (define-key map (kbd "e") #'mc/edit-lines)
+      map)))
+
+;; Use cmake-mode.el if it exists
+(require 'cmake-mode nil t)
 
 ;; Make the buffer list better
 (bind-key "C-x C-b" #'electric-buffer-list)
@@ -88,7 +110,7 @@
    '("d80952c58cf1b06d936b1392c38230b74ae1a2a6729594770762dc0779ac66b7" default))
  '(ispell-dictionary nil)
  '(package-selected-packages
-   '(meson-mode gdscript-mode magithub magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode sly flycheck gruvbox-theme which-key use-package company)))
+   '(multiple-cursors meson-mode gdscript-mode magithub magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode sly flycheck gruvbox-theme which-key use-package company)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
