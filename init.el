@@ -26,7 +26,7 @@
 (use-package lsp-mode
   :init
   (progn
-    (setq lsp-keymap-prefix "C-c l")
+    (setq lsp-keymap-prefix "C-l")
     (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
   :hook
   (c-mode-common . lsp))
@@ -65,6 +65,9 @@
       (define-key map (kbd "p") #'mc/mark-previous-like-this)
       (define-key map (kbd "e") #'mc/edit-lines)
       map)))
+(use-package highlight-indent-guides
+  :hook
+  (prog-mode . highlight-indent-guides-mode))
 
 ;; Use cmake-mode.el if it exists
 (require 'cmake-mode nil t)
@@ -108,9 +111,10 @@
  '(custom-enabled-themes '(gruvbox-dark-hard))
  '(custom-safe-themes
    '("d80952c58cf1b06d936b1392c38230b74ae1a2a6729594770762dc0779ac66b7" default))
+ '(highlight-indent-guides-method 'bitmap)
  '(ispell-dictionary nil)
  '(package-selected-packages
-   '(multiple-cursors meson-mode gdscript-mode magithub magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode sly flycheck gruvbox-theme which-key use-package company)))
+   '(highlight-indent-guides multiple-cursors meson-mode gdscript-mode magithub magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode sly flycheck gruvbox-theme which-key use-package company)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
