@@ -29,7 +29,8 @@
     (setq lsp-keymap-prefix "C-l")
     (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
   :hook
-  (c-mode-common . lsp))
+  (c-mode-common . lsp)
+  (gdscript-mode . lsp))
 (use-package lsp-ui)
 (use-package gdscript-mode)
 (use-package magit)
@@ -94,7 +95,7 @@
 (add-to-list 'auto-mode-alist '("/.stumpwmrc\\'" . common-lisp-mode))
 
 ;; Frame Configuration
-(menu-bar-mode -1)
+(menu-bar-mode 1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
