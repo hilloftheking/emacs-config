@@ -25,19 +25,13 @@
   (global-company-mode))
 (use-package lsp-mode
   :init
-  (progn
-    (setq lsp-keymap-prefix "C-l")
-    (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
+  (setq lsp-keymap-prefix "C-l")
   :hook
-  (c-mode-common . lsp)
-  (gdscript-mode . lsp))
+  ((c-mode-common . lsp)
+   (lsp-mode . lsp-enable-which-key-integration)))
 (use-package lsp-ui)
-(use-package gdscript-mode)
 (use-package magit)
 (use-package magithub)
-(use-package sly
-  :config
-  (setq inferior-lisp-program "sbcl"))
 (use-package flycheck
   :init
   (global-flycheck-mode))
@@ -49,7 +43,8 @@
      (lambda ()
        (setq clang-format-fallback-style "llvm")))))
 (use-package clang-format+
-  :hook c-mode-common)
+  :hook
+  (c-mode-common . clang-format+-mode))
 (use-package meson-mode)
 (use-package rainbow-mode
   :hook
@@ -111,18 +106,19 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(gruvbox-dark-hard))
  '(custom-safe-themes
-   '("d80952c58cf1b06d936b1392c38230b74ae1a2a6729594770762dc0779ac66b7" default))
+   '("d445c7b530713eac282ecdeea07a8fa59692c83045bf84dd112dd738c7bcad1d" "d80952c58cf1b06d936b1392c38230b74ae1a2a6729594770762dc0779ac66b7" default))
  '(highlight-indent-guides-method 'bitmap)
  '(ispell-dictionary nil)
  '(package-selected-packages
-   '(highlight-indent-guides multiple-cursors meson-mode gdscript-mode magithub magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode sly flycheck gruvbox-theme which-key use-package company)))
+   '(highlight-indent-guides multiple-cursors meson-mode gdscript-mode magithub magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode sly flycheck gruvbox-theme which-key use-package company))
+ '(warning-suppress-types '((lsp-mode))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 112 :width normal :foundry "*" :family (if (= (getenv "HOSTNAME") "machine") "Terminus" "Monospace"))))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 112 :width normal :foundry "*" :family "Monospace")))))
 
 (provide 'init)
 ;;; init.el ends here
