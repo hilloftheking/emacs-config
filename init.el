@@ -17,21 +17,29 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+(use-package delight)
 (use-package which-key
   :init
-  (which-key-mode))
+  (which-key-mode)
+  :delight)
+(use-package bind-key)
 (use-package company
   :init
   (global-company-mode))
+(use-package treemacs
+  :config
+  (bind-key "C-c t" 'treemacs))
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-l")
   :hook
   ((c-mode-common . lsp)
    (lsp-mode . lsp-enable-which-key-integration)))
-(use-package lsp-ui)
+(use-package lsp-ui
+  :init
+  ;; Fixes mouse movement cancelling chords, disables mouse hover tooltips
+  (setq lsp-ui-doc-enable nil))
 (use-package magit)
-(use-package magithub)
 (use-package flycheck
   :init
   (global-flycheck-mode))
@@ -42,13 +50,16 @@
      'c-mode-common-hook
      (lambda ()
        (setq clang-format-fallback-style "llvm")))))
-(use-package clang-format+
+(use-package format-all
   :hook
-  (c-mode-common . clang-format+-mode))
+  ((prog-mode . format-all-mode)
+   (format-all-mode . format-all-ensure-formatter))
+  :delight)
 (use-package meson-mode)
 (use-package rainbow-mode
   :hook
-  (prog-mode . rainbow-mode))
+  (prog-mode . rainbow-mode)
+  :delight)
 (use-package gruvbox-theme)
 (use-package multiple-cursors
   :config
@@ -63,10 +74,11 @@
       map)))
 (use-package highlight-indent-guides
   :hook
-  (prog-mode . highlight-indent-guides-mode))
-
-;; Use cmake-mode.el if it exists
-(require 'cmake-mode nil t)
+  (prog-mode . highlight-indent-guides-mode)
+  :delight)
+(use-package dtrt-indent
+  :delight)
+(use-package cmake-mode)
 
 ;; Make the buffer list better
 (bind-key "C-x C-b" #'electric-buffer-list)
@@ -79,20 +91,23 @@
 (bind-key "<mouse-9>" #'next-buffer)
 (bind-key "<mouse-8>" #'previous-buffer)
 
+;; Stops Windows from making error sound
+(setq visible-bell 1)
+
 ;; Enable scrolling the text left with C-x <
 (put 'scroll-left 'disabled nil)
 ;; Press a in dired to open without creating a new buffer
 (put 'dired-find-alternate-file 'disabled nil)
 
-;; Extension for common lisp (.cl)
-(add-to-list 'auto-mode-alist '("\\.cl\\'" . common-lisp-mode))
-;; .stumpwmrc file should open in common-lisp-mode
-(add-to-list 'auto-mode-alist '("/.stumpwmrc\\'" . common-lisp-mode))
-
 ;; Frame Configuration
 (menu-bar-mode 1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
+
+;; Hide some stuff from the modeline
+(delight 'abbrev-mode nil 'abbrev)
+(delight 'auto-revert-mode nil 'autorevert)
+(delight 'eldoc-mode nil 'eldoc)
 
 ;; Put autosaves in ~/.emacs.d/
 (setq backup-directory-alist
@@ -107,10 +122,11 @@
  '(custom-enabled-themes '(gruvbox-dark-hard))
  '(custom-safe-themes
    '("d445c7b530713eac282ecdeea07a8fa59692c83045bf84dd112dd738c7bcad1d" "d80952c58cf1b06d936b1392c38230b74ae1a2a6729594770762dc0779ac66b7" default))
+ '(dtrt-indent-global-mode t)
  '(highlight-indent-guides-method 'bitmap)
  '(ispell-dictionary nil)
  '(package-selected-packages
-   '(highlight-indent-guides multiple-cursors meson-mode gdscript-mode magithub magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode sly flycheck gruvbox-theme which-key use-package company))
+   '(delight cmake-mode dtrt-indent treemacs format-all highlight-indent-guides multiple-cursors meson-mode gdscript-mode magithub magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode sly flycheck gruvbox-theme which-key use-package company))
  '(warning-suppress-types '((lsp-mode))))
 
 (custom-set-faces
@@ -118,7 +134,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 112 :width normal :foundry "*" :family "Monospace")))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 112 :width normal :foundry "Monospace" :family "Terminus")))))
 
 (provide 'init)
 ;;; init.el ends here
