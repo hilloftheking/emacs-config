@@ -16,40 +16,61 @@
 
 (require 'use-package)
 (setq use-package-always-ensure t)
+(setq use-package-compute-statistics t)
 
 (use-package delight)
 (use-package which-key
-  :init
+  :config
   (which-key-mode)
   :delight)
-(use-package bind-key)
 (use-package company
-  :init
-  (global-company-mode))
-(use-package treemacs
   :config
-  (bind-key "C-c t" 'treemacs))
+  (global-company-mode)
+  :delight)
+(use-package bind-key)
+(use-package ivy
+  :config
+  (ivy-mode)
+  :delight)
+(use-package swiper
+  :bind
+  (("C-s" . swiper-isearch)
+   ("C-r" . swiper-isearch-backward)))
+(use-package treemacs
+  :bind
+  ("C-c t" . treemacs))
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-l")
   :hook
   ((c-mode-common . lsp)
-   (lsp-mode . lsp-enable-which-key-integration)))
+   (lsp-mode . lsp-enable-which-key-integration))
+  :bind
+  (:map lsp-command-map
+        ("g a" . lsp-ivy-workspace-symbol))
+  :defer t)
 (use-package lsp-ui
-  :init
-  ;; Fixes mouse movement cancelling chords, disables mouse hover tooltips
-  (setq lsp-ui-doc-enable nil))
-(use-package magit)
+  :config
+  (progn
+    (setq lsp-ui-doc-show-with-mouse nil) ;; Fixes mouse movement cancelling chords, disables mouse hover tooltips
+    (setq lsp-ui-doc-position 'at-point))
+  :commands lsp
+  :bind
+  (:map lsp-command-map
+        ("C-l" . lsp-ui-doc-glance)))
+(use-package lsp-ivy)
+(use-package magit
+  :commands
+  magit)
 (use-package flycheck
-  :init
+  :config
   (global-flycheck-mode))
 (use-package clang-format
   :init
-  (progn
-    (add-hook
-     'c-mode-common-hook
-     (lambda ()
-       (setq clang-format-fallback-style "llvm")))))
+  (add-hook
+   'c-mode-common-hook
+   (lambda ()
+     (setq clang-format-fallback-style "llvm"))))
 (use-package format-all
   :hook
   ((prog-mode . format-all-mode)
@@ -72,11 +93,15 @@
       (define-key map (kbd "p") #'mc/mark-previous-like-this)
       (define-key map (kbd "e") #'mc/edit-lines)
       map)))
+(use-package dtrt-indent
+  :config
+  (dtrt-indent-global-mode)
+  :delight)
 (use-package highlight-indent-guides
+  :init
+  (setq highlight-indent-guides-method 'bitmap)
   :hook
   (prog-mode . highlight-indent-guides-mode)
-  :delight)
-(use-package dtrt-indent
   :delight)
 (use-package cmake-mode)
 
@@ -113,6 +138,10 @@
 (setq backup-directory-alist
       `(("." . ,(concat user-emacs-directory "backups"))))
 
+;; Use Terminus font if it exists, otherwise use Monospace default
+(defun font-exists-p (font) "Check if FONT exists." (if (null (x-list-fonts font)) nil t))
+(set-face-attribute 'default nil :height 112 :family (if (font-exists-p "Terminus") "Terminus" "Monospace"))
+
 ;; Stuff from customize
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -122,19 +151,10 @@
  '(custom-enabled-themes '(gruvbox-dark-hard))
  '(custom-safe-themes
    '("d445c7b530713eac282ecdeea07a8fa59692c83045bf84dd112dd738c7bcad1d" "d80952c58cf1b06d936b1392c38230b74ae1a2a6729594770762dc0779ac66b7" default))
- '(dtrt-indent-global-mode t)
- '(highlight-indent-guides-method 'bitmap)
  '(ispell-dictionary nil)
  '(package-selected-packages
-   '(delight cmake-mode dtrt-indent treemacs format-all highlight-indent-guides multiple-cursors meson-mode gdscript-mode magithub magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode sly flycheck gruvbox-theme which-key use-package company))
+   '(lsp-ivy swiper ivy delight cmake-mode dtrt-indent treemacs format-all highlight-indent-guides multiple-cursors meson-mode gdscript-mode magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode flycheck gruvbox-theme which-key use-package company))
  '(warning-suppress-types '((lsp-mode))))
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 112 :width normal :foundry "Monospace" :family "Terminus")))))
 
 (provide 'init)
 ;;; init.el ends here
