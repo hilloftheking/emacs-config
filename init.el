@@ -223,7 +223,7 @@
       `(("." . ,(concat user-emacs-directory "backups"))))
 
 ;; Use Terminus font
-(add-to-list 'default-frame-alist '(font . "Terminus-10"))
+(add-to-list 'default-frame-alist '(font . "Terminus-12"))
 
 ;; Stuff from customize
 (custom-set-variables
