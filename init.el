@@ -222,10 +222,8 @@
 (setq backup-directory-alist
       `(("." . ,(concat user-emacs-directory "backups"))))
 
-;; Use Terminus font if it exists, otherwise use Monospace default
-(defun font-exists-p (font) "Check if FONT exists." (if (null (x-list-fonts font)) nil t))
-(if (font-exists-p "Terminus")
-    (set-face-font 'default "Terminus-10"))
+;; Use Terminus font
+(add-to-list 'default-frame-alist '(font . "Terminus-10"))
 
 ;; Stuff from customize
 (custom-set-variables
