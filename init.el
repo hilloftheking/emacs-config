@@ -172,7 +172,7 @@
   :delight)
 (use-package gruvbox-theme
   :config
-  (load-theme 'gruvbox-dark-medium t))
+  (load-theme 'gruvbox-dark-hard t))
 (use-package dtrt-indent
   :config
   (dtrt-indent-global-mode)
@@ -223,7 +223,9 @@
       `(("." . ,(concat user-emacs-directory "backups"))))
 
 ;; Use Terminus font
-(add-to-list 'default-frame-alist '(font . "Terminus-12"))
+(add-to-list 'default-frame-alist (cons 'font (if (equal (system-name) "stinkpad")
+                                                  "Terminus-12"
+                                                "Terminus-10")))
 
 ;; Stuff from customize
 (custom-set-variables
