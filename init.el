@@ -25,11 +25,13 @@
   (meow-motion-overwrite-define-key
    '("j" . meow-next)
    '("k" . meow-prev)
+   '("n" . "H-j")
+   '("p" . "H-k")
    '("<escape>" . ignore))
   (meow-leader-define-key
-   ;; SPC j/k will run the original command in MOTION state.
-   '("j" . "H-j")
-   '("k" . "H-k")
+   ;; SPC n/p will run the original command in MOTION state.
+   '("n" . "H-n")
+   '("p" . "H-p")
    ;; Use SPC (0-9) for digit arguments.
    '("1" . meow-digit-argument)
    '("2" . meow-digit-argument)
@@ -87,6 +89,7 @@
    '("o" . meow-block)
    '("O" . meow-to-block)
    '("p" . meow-yank)
+   '("P" . meow-yank-pop)
    '("q" . meow-quit)
    '("Q" . meow-goto-line)
    '("r" . meow-replace)
@@ -105,10 +108,6 @@
    '("z" . meow-pop-selection)
    '("'" . repeat)
    '("<escape>" . ignore))
-  (meow-motion-overwrite-define-key '("j" . next-line))
-  (meow-motion-overwrite-define-key '("n" . "H-j"))
-  (meow-motion-overwrite-define-key '("k" . previous-line))
-  (meow-motion-overwrite-define-key '("p" . "H-k"))
   (meow-global-mode))
 (use-package which-key
   :config
@@ -132,7 +131,7 @@
   ("C-c t" . treemacs))
 (use-package lsp-mode
   :init
-  (setq lsp-keymap-prefix "C-l")
+  (setq lsp-keymap-prefix "\\")
   :hook
   ((c-mode-common . lsp)
    (lsp-mode . lsp-enable-which-key-integration))
@@ -147,7 +146,7 @@
   :commands lsp
   :bind
   (:map lsp-command-map
-        ("C-l" . lsp-ui-doc-glance)))
+        ("l" . lsp-ui-doc-glance)))
 (use-package lsp-ivy)
 (use-package magit
   :commands
@@ -172,17 +171,6 @@
   (prog-mode . rainbow-mode)
   :delight)
 (use-package gruvbox-theme)
-(use-package multiple-cursors
-  :config
-  (define-key
-    (current-global-map)
-    (kbd "C-c c")
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "*") #'mc/mark-all-like-this)
-      (define-key map (kbd "n") #'mc/mark-next-like-this)
-      (define-key map (kbd "p") #'mc/mark-previous-like-this)
-      (define-key map (kbd "e") #'mc/edit-lines)
-      map)))
 (use-package dtrt-indent
   :config
   (dtrt-indent-global-mode)
@@ -194,6 +182,10 @@
   (prog-mode . highlight-indent-guides-mode)
   :delight)
 (use-package cmake-mode)
+(use-package ace-window
+  :config
+  (meow-normal-define-key
+   '(":" . ace-window)))
 
 ;; Make the buffer list better
 (bind-key "C-x C-b" #'electric-buffer-list)
