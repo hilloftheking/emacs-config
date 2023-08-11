@@ -170,7 +170,9 @@
   :hook
   (prog-mode . rainbow-mode)
   :delight)
-(use-package gruvbox-theme)
+(use-package gruvbox-theme
+  :config
+  (load-theme 'gruvbox-dark-medium t))
 (use-package dtrt-indent
   :config
   (dtrt-indent-global-mode)
@@ -222,7 +224,8 @@
 
 ;; Use Terminus font if it exists, otherwise use Monospace default
 (defun font-exists-p (font) "Check if FONT exists." (if (null (x-list-fonts font)) nil t))
-(set-face-attribute 'default nil :height 112 :family (if (font-exists-p "Terminus") "Terminus" "Monospace"))
+(if (font-exists-p "Terminus")
+    (set-face-font 'default "Terminus-10"))
 
 ;; Stuff from customize
 (custom-set-variables
@@ -230,9 +233,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes '(gruvbox-dark-hard))
- '(custom-safe-themes
-   '("d445c7b530713eac282ecdeea07a8fa59692c83045bf84dd112dd738c7bcad1d" "d80952c58cf1b06d936b1392c38230b74ae1a2a6729594770762dc0779ac66b7" default))
  '(ispell-dictionary nil)
  '(package-selected-packages
    '(meow lsp-ivy swiper ivy delight cmake-mode dtrt-indent treemacs format-all highlight-indent-guides multiple-cursors meson-mode gdscript-mode magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode flycheck gruvbox-theme which-key use-package company))
@@ -240,9 +240,3 @@
 
 (provide 'init)
 ;;; init.el ends here
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
