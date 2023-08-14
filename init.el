@@ -115,6 +115,7 @@
   :delight)
 (use-package company
   :config
+  (setq company-global-modes '(not org-mode eshell-mode term-mode))
   (global-company-mode)
   :delight)
 (use-package bind-key)
@@ -223,9 +224,10 @@
       `(("." . ,(concat user-emacs-directory "backups"))))
 
 ;; Use Terminus font
-(add-to-list 'default-frame-alist (cons 'font (if (equal (system-name) "stinkpad")
-                                                  "Terminus-12"
-                                                "Terminus-10")))
+(add-to-list 'default-frame-alist (cons
+                                   'font (if (equal (system-name) "stinkpad")
+                                             "Terminus-14" ;; Size seems to be different on stinkpad
+                                           "Terminus-13")))
 
 ;; Stuff from customize
 (custom-set-variables
