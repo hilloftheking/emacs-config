@@ -21,6 +21,21 @@
 (use-package delight)
 (use-package meow ;; This is kind of big. Maybe I will move it to a diff file
   :config
+  (defun hotk/pop-mark () "Pops the mark (C-u C-x)." (interactive) (set-mark-command 0))
+  (defun hotk/region-math-generic (op num) nil ()
+         (setq delete-selection-save-to-register t)
+         (delete-active-region)
+         (insert (number-to-string
+                  (funcall op
+                           (string-to-number (get-register delete-selection-save-to-register))
+                           num))))
+  (defun hotk/region-math-add (num) "Inserts num + mark." (interactive "NAdd: ")
+	 (hotk/region-math-generic '+ num))
+  (defun hotk/region-math-mult (num) "Inserts num * region." (interactive "NMultiply: ")
+	 (hotk/region-math-generic '* num))
+  (defun hotk/region-math-div (num) "Inserts num / region." (interactive "NDivide: ")
+	 (hotk/region-math-generic '/ num))
+
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
   (meow-motion-overwrite-define-key
    '("j" . meow-next)
@@ -106,13 +121,21 @@
    '("y" . meow-save)
    '("Y" . meow-sync-grab)
    '("z" . meow-pop-selection)
+   '("Z" . hotk/pop-mark)
    '("'" . repeat)
+   '("+" . hotk/region-math-add)
+   '("*" . hotk/region-math-mult)
+   '("/" . hotk/region-math-div)
    '("<escape>" . ignore))
   (meow-global-mode))
 (use-package which-key
   :config
   (which-key-mode)
   :delight)
+(use-package ace-window
+  :config
+  (meow-normal-define-key
+   '(":" . ace-window)))
 (use-package company
   :config
   (setq company-global-modes '(not org-mode eshell-mode term-mode))
@@ -167,6 +190,7 @@
    (format-all-mode . format-all-ensure-formatter))
   :delight)
 (use-package meson-mode)
+(use-package cmake-mode)
 (use-package rainbow-mode
   :hook
   (prog-mode . rainbow-mode)
@@ -184,11 +208,9 @@
   :hook
   (prog-mode . highlight-indent-guides-mode)
   :delight)
-(use-package cmake-mode)
-(use-package ace-window
-  :config
-  (meow-normal-define-key
-   '(":" . ace-window)))
+(use-package rainbow-delimiters
+  :hook
+  (lisp-data-mode . rainbow-delimiters-mode))
 
 ;; Make the buffer list better
 (bind-key "C-x C-b" #'electric-buffer-list)
@@ -224,10 +246,13 @@
       `(("." . ,(concat user-emacs-directory "backups"))))
 
 ;; Use Terminus font
-(add-to-list 'default-frame-alist (cons
-                                   'font (if (equal (system-name) "stinkpad")
-                                             "Terminus-14" ;; Size seems to be different on stinkpad
-                                           "Terminus-13")))
+(defvar hostname-font-alist (list
+                             '(stinkpad . "Terminus-14")
+                             '(machine . "Terminus-13")))
+(add-to-list 'default-frame-alist
+             (cons 'font (or
+                          (cdr (assoc (intern (downcase (system-name))) hostname-font-alist))
+                          "Monospace"))) ;; Default to Monospace
 
 ;; Stuff from customize
 (custom-set-variables
@@ -237,7 +262,7 @@
  ;; If there is more than one, they won't work right.
  '(ispell-dictionary nil)
  '(package-selected-packages
-   '(meow lsp-ivy swiper ivy delight cmake-mode dtrt-indent treemacs format-all highlight-indent-guides multiple-cursors meson-mode gdscript-mode magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode flycheck gruvbox-theme which-key use-package company))
+   '(rainbow-delimiters meow lsp-ivy swiper ivy delight cmake-mode dtrt-indent treemacs format-all highlight-indent-guides multiple-cursors meson-mode gdscript-mode magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode flycheck gruvbox-theme which-key use-package company))
  '(warning-suppress-types '((lsp-mode))))
 
 (provide 'init)
