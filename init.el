@@ -138,7 +138,7 @@
    '(":" . ace-window)))
 (use-package company
   :config
-  (setq company-global-modes '(not org-mode eshell-mode term-mode))
+  (setq company-global-modes '(not org-mode eshell-mode term-mode shell-mode))
   (global-company-mode)
   :delight)
 (use-package bind-key)
@@ -172,6 +172,14 @@
   (:map lsp-command-map
         ("l" . lsp-ui-doc-glance)))
 (use-package lsp-ivy)
+(use-package elpy
+  :config
+  (setq elpy-shell-echo-output nil
+	elpy-shell-echo-input nil
+	elpy-shell-display-buffer-after-send t
+	python-shell-interpreter "ipython"
+	python-shell-interpreter-args "-i")
+  (elpy-enable))
 (use-package magit
   :commands
   magit)
@@ -262,7 +270,7 @@
  ;; If there is more than one, they won't work right.
  '(ispell-dictionary nil)
  '(package-selected-packages
-   '(rainbow-delimiters meow lsp-ivy swiper ivy delight cmake-mode dtrt-indent treemacs format-all highlight-indent-guides multiple-cursors meson-mode gdscript-mode magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode flycheck gruvbox-theme which-key use-package company))
+   '(elpy rainbow-delimiters meow lsp-ivy swiper ivy delight cmake-mode dtrt-indent treemacs format-all highlight-indent-guides multiple-cursors meson-mode gdscript-mode magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode flycheck gruvbox-theme which-key use-package company))
  '(warning-suppress-types '((lsp-mode))))
 
 (provide 'init)
