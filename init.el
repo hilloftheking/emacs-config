@@ -1,7 +1,7 @@
 ;;; init.el --- Main config file for emacs
 
 ;;; Commentary:
-;; My personal config, probably sucks
+;; My personal config - abandon hope all ye who enter here
 
 ;;; Code:
 ;; Packages
@@ -22,13 +22,13 @@
 (use-package meow ;; This is kind of big. Maybe I will move it to a diff file
   :config
   (defun hotk/pop-mark () "Pops the mark (C-u C-x)." (interactive) (set-mark-command 0))
-  (defun hotk/region-math-generic (op num) nil ()
-         (setq delete-selection-save-to-register t)
-         (delete-active-region)
-         (insert (number-to-string
-                  (funcall op
-                           (string-to-number (get-register delete-selection-save-to-register))
-                           num))))
+  (defun hotk/region-math-generic (op num)
+    (setq delete-selection-save-to-register t)
+    (delete-active-region)
+    (insert (number-to-string
+             (funcall op
+                      (string-to-number (get-register delete-selection-save-to-register))
+                      num))))
   (defun hotk/region-math-add (num) "Inserts num + mark." (interactive "NAdd: ")
 	 (hotk/region-math-generic '+ num))
   (defun hotk/region-math-mult (num) "Inserts num * region." (interactive "NMultiply: ")
@@ -37,6 +37,14 @@
 	 (hotk/region-math-generic '/ num))
 
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+  (setq meow-use-clipboard t)
+
+  (meow-define-state motion-none
+    "Motion state that doesn't change j and k."
+    :lighter " [X]")
+  (add-to-list 'meow-mode-state-list
+               '(calc-mode . motion-none)) ;; Overwriting keys in calc causes crash
+
   (meow-motion-overwrite-define-key
    '("j" . meow-next)
    '("k" . meow-prev)
@@ -142,6 +150,9 @@
   (global-company-mode)
   :delight)
 (use-package bind-key)
+(use-package flycheck
+  :config
+  (global-flycheck-mode))
 (use-package ivy
   :config
   (ivy-mode)
@@ -179,12 +190,15 @@
 	elpy-shell-display-buffer-after-send t
 	python-shell-interpreter "ipython"
 	python-shell-interpreter-args "-i")
+  ;; Flycheck will be used instead of flymake
+  (delete 'elpy-module-flymake elpy-modules)
   (elpy-enable))
 (use-package magit
   :commands
   magit)
 (use-package flycheck
   :config
+  (setq flycheck-display-errors-delay 0.3)
   (global-flycheck-mode))
 (use-package clang-format
   :init
@@ -199,6 +213,9 @@
   :delight)
 (use-package meson-mode)
 (use-package cmake-mode)
+(use-package gdscript-mode
+  :hook
+  (gdscript-mode . lsp))
 (use-package rainbow-mode
   :hook
   (prog-mode . rainbow-mode)
@@ -226,6 +243,9 @@
 ;; Always display line numbers
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'prog-mode-hook #'column-number-mode)
+
+;; Wrap lines in text files
+(add-hook 'text-mode-hook #'visual-line-mode)
 
 ;; Side buttons on mouse to move between buffers
 (bind-key "<mouse-9>" #'next-buffer)
