@@ -166,7 +166,8 @@
   ("C-c t" . treemacs))
 (use-package lsp-mode
   :init
-  (setq lsp-keymap-prefix "\\")
+  (setq lsp-keymap-prefix "\\"
+        xref-auto-jump-to-first-definition t) ;; For some reason this is needed on my laptop
   :hook
   ((c-mode-common . lsp)
    (lsp-mode . lsp-enable-which-key-integration))
@@ -220,9 +221,9 @@
   :hook
   (prog-mode . rainbow-mode)
   :delight)
-(use-package gruvbox-theme
+(use-package nordic-night-theme
   :config
-  (load-theme 'gruvbox-dark-hard t))
+  (load-theme 'nordic-night t))
 (use-package dtrt-indent
   :config
   (dtrt-indent-global-mode)
@@ -236,6 +237,7 @@
 (use-package rainbow-delimiters
   :hook
   (lisp-data-mode . rainbow-delimiters-mode))
+(use-package yaml-mode)
 
 ;; Make the buffer list better
 (bind-key "C-x C-b" #'electric-buffer-list)
@@ -288,10 +290,17 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(gdb-many-windows t)
  '(ispell-dictionary nil)
  '(package-selected-packages
-   '(elpy rainbow-delimiters meow lsp-ivy swiper ivy delight cmake-mode dtrt-indent treemacs format-all highlight-indent-guides multiple-cursors meson-mode gdscript-mode magit rainbow-mode clang-format+ clang-format lsp-ui lsp-mode flycheck gruvbox-theme which-key use-package company))
+   '(nordic-night-theme yaml-mode elpy rainbow-delimiters meow lsp-ivy swiper ivy delight cmake-mode dtrt-indent treemacs format-all highlight-indent-guides meson-mode gdscript-mode magit rainbow-mode clang-format lsp-ui lsp-mode flycheck which-key use-package company))
  '(warning-suppress-types '((lsp-mode))))
 
 (provide 'init)
 ;;; init.el ends here
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
