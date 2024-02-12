@@ -35,6 +35,8 @@
 	 (hotk/region-math-generic '* num))
   (defun hotk/region-math-div (num) "Inserts num / region." (interactive "NDivide: ")
 	 (hotk/region-math-generic '/ num))
+  (defun hotk/show-lsp-keymap () "Shows LSP keymap." (interactive)
+         (set-transient-map lsp-command-map))
 
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
   (setq meow-use-clipboard t)
@@ -43,7 +45,7 @@
     "Motion state that doesn't change j and k."
     :lighter " [X]")
   (add-to-list 'meow-mode-state-list
-               '(calc-mode . motion-none)) ;; Overwriting keys in calc causes crash
+	       '(calc-mode . motion-none)) ;; Overwriting keys in calc causes crash
 
   (meow-motion-overwrite-define-key
    '("j" . meow-next)
@@ -134,6 +136,7 @@
    '("+" . hotk/region-math-add)
    '("*" . hotk/region-math-mult)
    '("/" . hotk/region-math-div)
+   '("\\" . hotk/show-lsp-keymap)
    '("<escape>" . ignore))
   (meow-global-mode))
 (use-package which-key
@@ -166,8 +169,7 @@
   ("C-c t" . treemacs))
 (use-package lsp-mode
   :init
-  (setq lsp-keymap-prefix "\\"
-        xref-auto-jump-to-first-definition t) ;; For some reason this is needed on my laptop
+  (setq xref-auto-jump-to-first-definition t) ;; For some reason this is needed on my laptop
   :hook
   ((c-mode-common . lsp)
    (lsp-mode . lsp-enable-which-key-integration))
@@ -294,7 +296,8 @@
  '(ispell-dictionary nil)
  '(package-selected-packages
    '(nordic-night-theme yaml-mode elpy rainbow-delimiters meow lsp-ivy swiper ivy delight cmake-mode dtrt-indent treemacs format-all highlight-indent-guides meson-mode gdscript-mode magit rainbow-mode clang-format lsp-ui lsp-mode flycheck which-key use-package company))
- '(warning-suppress-types '((lsp-mode))))
+ '(warning-suppress-types '((lsp-mode)))
+ '(which-key-show-transient-maps t))
 
 (provide 'init)
 ;;; init.el ends here
