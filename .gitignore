@@ -1,0 +1,6 @@
+*
+# Ignore everything except for the following
+!.gitignore
+!init.el
+!exotica-theme.el
+
