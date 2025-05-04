@@ -1,10 +1,16 @@
 (context-menu-mode 1)
 (tool-bar-mode -1)
 
+(setq make-backup-files nil)
+
+					;(setq eglot-report-progress nil)
+
 (column-number-mode 1)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
-(setq c-guess-region-max 500)
-(add-hook 'c-mode-common-hook 'c-guess-buffer)
+
+					; This is jank
+					;(setq c-guess-region-max 500)
+					;(add-hook 'c-mode-common-hook 'c-guess-buffer)
 
 (keymap-global-set "C-x C-b" 'electric-buffer-list)
 (keymap-global-set "C-c q" 'calculator)
@@ -31,9 +37,10 @@
   :config
   (which-key-mode 1))
 (use-package glsl-mode)
-(use-package clang-format
-  :config
-  (fset 'c-indent-region 'clang-format-region))
+(use-package lua-mode)
+(use-package clang-format-lite
+  :hook
+  ((c-mode . clang-format-lite-save-hook) (c++-mode . clang-format-lite-save-hook)))
 (use-package eat
   :hook ((eshell-load . eat-eshell-mode) (eshell-load . eat-eshell-visual-command-mode)))
 
@@ -134,7 +141,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(eat clang-format gdscript-mode glsl-mode magit which-key meow company)))
+   '(clang-format-lite company eat eglot gdscript-mode
+		       glsl-mode lua-mode magit meow which-key)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
