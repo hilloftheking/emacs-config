@@ -2,15 +2,11 @@
 (tool-bar-mode -1)
 
 (setq make-backup-files nil)
-
-					;(setq eglot-report-progress nil)
+(setq gdb-many-windows t)
+(setq dired-listing-switches (concat dired-listing-switches "h"))
 
 (column-number-mode 1)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
-
-					; This is jank
-					;(setq c-guess-region-max 500)
-					;(add-hook 'c-mode-common-hook 'c-guess-buffer)
 
 (keymap-global-set "C-x C-b" 'electric-buffer-list)
 (keymap-global-set "C-c q" 'calculator)
@@ -29,6 +25,9 @@
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
 
+(use-package eglot
+  :config
+  (setq eglot-ignored-server-capabilities '(:inlayHintProvider)))
 (use-package magit)
 (use-package company
   :hook (prog-mode . company-mode))
@@ -41,19 +40,20 @@
 (use-package clang-format-lite
   :hook
   ((c-mode . clang-format-lite-save-hook) (c++-mode . clang-format-lite-save-hook)))
+(use-package editorconfig
+  :config
+  (editorconfig-mode 1))
 (use-package eat
   :hook ((eshell-load . eat-eshell-mode) (eshell-load . eat-eshell-visual-command-mode)))
 
 (defun meow-setup ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
-  (meow-motion-overwrite-define-key
+  (setq meow-use-clipboard t)
+  (meow-motion-define-key
    '("j" . meow-next)
    '("k" . meow-prev)
    '("<escape>" . ignore))
   (meow-leader-define-key
-   ;; SPC j/k will run the original command in MOTION state.
-   '("j" . "H-j")
-   '("k" . "H-k")
    ;; Use SPC (0-9) for digit arguments.
    '("1" . meow-digit-argument)
    '("2" . meow-digit-argument)
@@ -141,8 +141,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(clang-format-lite company eat eglot gdscript-mode
-		       glsl-mode lua-mode magit meow which-key)))
+   '(clang-format-lite company eat eglot gdscript-mode glsl-mode lua-mode
+		       magit meow which-key)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
