@@ -4,12 +4,20 @@
 (setq make-backup-files nil)
 (setq gdb-many-windows t)
 (setq dired-listing-switches (concat dired-listing-switches "h"))
+(setq read-file-name-completion-ignore-case t
+      read-buffer-completion-ignore-case t
+      completion-ignore-case t)
 
 (column-number-mode 1)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
-(keymap-global-set "C-x C-b" 'electric-buffer-list)
+(keymap-global-set "C-x b" 'electric-buffer-list)
+(keymap-global-set "C-x C-b" 'switch-to-buffer)
 (keymap-global-set "C-c q" 'calculator)
+
+;; dired opens a new window with each click by default which is dumb
+(with-eval-after-load "dired"
+  (define-key dired-mode-map [mouse-2] 'dired-mouse-find-file))
 
 (setq mouse-wheel-progressive-speed nil)
 (setcar mouse-wheel-scroll-amount 5)
@@ -28,9 +36,23 @@
 (use-package eglot
   :config
   (setq eglot-ignored-server-capabilities '(:inlayHintProvider)))
+(use-package vertico
+  :config
+  (vertico-mode))
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles partial-completion))))
+  (completion-category-defaults nil) ;; Disable defaults, use our settings
+  (completion-pcm-leading-wildcard t)) ;; Emacs 31: partial-completion behaves like substring
 (use-package magit)
-(use-package company
-  :hook (prog-mode . company-mode))
+(use-package corfu
+  :custom
+  (corfu-auto t)
+  :config
+  (global-corfu-mode)
+  ;; Don't use enter key for completions
+  (keymap-unset corfu-map "RET"))
 (use-package meow)
 (use-package which-key
   :config
@@ -133,19 +155,3 @@
 (meow-setup)
 (meow-global-mode 1)
 
-
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(clang-format-lite company eat eglot gdscript-mode glsl-mode lua-mode
-		       magit meow which-key)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
