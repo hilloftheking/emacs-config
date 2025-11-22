@@ -1,3 +1,7 @@
+(require 'server)
+(unless (server-running-p)
+  (server-start))
+
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
@@ -38,7 +42,10 @@
   ;; Set breakpoints with mouse
   (dape-breakpoint-global-mode +1)
   ;; Pulse source line (performance hit)
-  (add-hook 'dape-display-source-hook #'pulse-momentary-highlight-one-line))
+  (add-hook 'dape-display-source-hook #'pulse-momentary-highlight-one-line)
+  :config
+  ;; Kill compile window on build success
+  (add-hook 'dape-compile-hook #'delete-windows-on))
 
 ;;;; ** Languages **
 
@@ -46,6 +53,7 @@
 (use-package glsl-mode)
 (use-package lua-mode)
 (use-package rust-mode)
+(use-package gdscript-mode)
 
 (add-to-list 'eglot-server-programs
 	     '(csharp-mode . ("csharp-ls")))
@@ -203,8 +211,8 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    '(clang-format-lite color-theme-sanityinc-tomorrow corfu dape eat
-		       glsl-mode lua-mode magit markdown-mode meow
-		       orderless rust-mode vertico)))
+		       gdscript-mode glsl-mode lua-mode magit
+		       markdown-mode meow orderless rust-mode vertico)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
