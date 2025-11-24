@@ -78,6 +78,12 @@
 (keymap-global-set "C-x C-b" 'switch-to-buffer)
 (keymap-global-set "C-c q" 'calculator)
 
+(keymap-global-set "C-c w" (define-keymap
+			     "h" #'windmove-left
+			     "j" #'windmove-down
+			     "k" #'windmove-up
+			     "l" #'windmove-right))
+
 ;; dired opens a new window with each click by default which is dumb
 (with-eval-after-load "dired"
   (define-key dired-mode-map [mouse-2] 'dired-mouse-find-file))
